@@ -1,0 +1,564 @@
+{
+  "info": {
+    "_postman_id": "e8a52f71-c443-42ed-92cf-c7a2dd80c7ba",
+    "name": "Внешнее API МЛК",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24022697",
+    "_collection_link": "https://go.postman.co/collection/24022697-e8a52f71-c443-42ed-92cf-c7a2dd80c7ba?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Управление уведомлениями",
+      "item": [
+        {
+          "name": "Получение срока хранение уведомлений",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/api/v1/notifications/interval/old",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "interval",
+                "old"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Установка срока хранения уведомлений",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"interval\": \"300 days\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/notifications/interval/old",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "interval",
+                "old"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отправка уведомления",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.data && jsonData.data.length > 0) {",
+                  "    const notificationId = jsonData.data[0].id;",
+                  "    pm.environment.set(\"NOTIFICATION_ID\", notificationId);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"subscriber\": \"{{SUBSCRIBER_CODE}}\",\n    \"title\": \"title 2\",\n    \"body\": \"body 2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/notifications/send",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отслеживание статуса уведомления",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/notifications/{{NOTIFICATION_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "{{NOTIFICATION_ID}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Управление новостями",
+      "item": [
+        {
+          "name": "Создание новости",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"{{NEWS_ID}}\",\n    \"title\": \"заголовок новости, обязательное поле\", \n    \"imageUrl\": \"https://otvet.cdn-vk.net/api/pictures/images/u_f0635f548350b59759c03b959e8cc91a_800_large.jpg\",\n    \"announcement\": \"анонс новости, необязательное поле\",\n    \"body\": \"тело новости, обязательное поле\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/news/",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Получение списка всех новостей",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/api/v1/news/",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Получение конкретной новости",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/api/v1/news/{{NEWS_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                "{{NEWS_ID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Обновление новости",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // \"title\": \"измененный заголовок новости, необязательное поле\",\n    // \"imageUrl\": \"измененная ссылка на изображение новости, необязательное поле\",\n    // \"announcement\": \"измененный анонс новости, необязательное поле\",\n    // \"body\": \"измененное тело новости, обязательное поле\",\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/news/{{NEWS_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                "{{NEWS_ID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Удаление новости",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/news/{{NEWS_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                "{{NEWS_ID}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Управление магазином",
+      "item": [
+        {
+          "name": "Категории",
+          "item": [
+            {
+              "name": "Получение списка категорий",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/category/",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "category",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Добавление категории",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"category\": \"Интернет\",\n    \"imageUrl\": \"https://w7.pngwing.com/pngs/1022/876/png-transparent-computer-icons-internet-world-wide-web-symmetry-earth-internet.png\",\n    \"type\":\"type_inet\" \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/category/",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "category",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Обновление категории",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"category\": \"Интернет\",\n    \"imageUrl\": \"https://w7.pngwing.com/pngs/1022/876/png-transparent-computer-icons-internet-world-wide-web-symmetry-earth-internet.png\",\n    \"type\":\"type_inet\" \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/category/4",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "category",
+                    "4"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Удаление категории",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/category/2",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "category",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Товары/услуги",
+          "item": [
+            {
+              "name": "Получение списка товаров/услуг",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/goods/",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "goods",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Добавление услуги/товара",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"good_id\":\"{{GOOD_ID}}\",\n    \"announcement\": \"Описания пока нет\",\n    \"category\": \"Интернет\",\n    \"title\": \"Интернет 500 Мб\",\n    \"type\": \"type_inet\",\n    \"description\": \"Описания пока нет\",\n    \"price\": 200,\n    \"frequency\": \"месяц\",\n    \"imageUrl\": \"https://cdn.vanguardngr.com/wp-content/uploads/2021/03/internet.jpg\",\n    \"is_available\": true \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/goods/",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "goods",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Обновление информации о товаре",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"good_id\":\"3\",\n    \"announcement\": \"Описания пока нет\",\n    \"category\": \"Интернет\",\n    \"title\": \"Интернет 500 Мб\",\n    \"type\": \"type_inet\",\n    \"description\": \"Описания пока нет\",\n    \"price\": 200,\n    \"frequency\": \"месяц\",\n    \"imageUrl\": \"https://cdn.vanguardngr.com/wp-content/uploads/2021/03/internet.jpg\",\n    \"is_available\": true \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/goods/{{GOOD_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "goods",
+                    "{{GOOD_ID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Удаление услуги/товара",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{HOST}}/api/v1/sales/goods/{{GOOD_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sales",
+                    "goods",
+                    "{{GOOD_ID}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{OPERATOR_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "SUBSCIBER_CODE",
+      "value": "",
+      "description": "Код абонента (для отправки уведомлений)"
+    },
+    {
+      "key": "NEWS_ID",
+      "value": "",
+      "description": "Внешний идентификатор новости"
+    },
+    {
+      "key": "GOOD_ID",
+      "value": "",
+      "description": "Артикул товара"
+    }
+  ]
+}
