@@ -1,7 +1,7 @@
 # Описание внешних API МЛК
 
 > [!warning]
-> Документация соответствует МЛК версии 26.2
+> Документация соответствует МЛК версии 26.6
 
 ## Общие положения
 
@@ -391,6 +391,43 @@ JSON тело запроса:
            "image_url": "https://w7.pngwing.com/pngs/1022/876/png-transparent-computer-icons-internet-world-wide-web-symmetry-earth-internet.png",
            "type": "type_inet"
        }
+   },
+   "message": "success",
+   "code": 200
+}
+```
+
+### Обновление категории
+
+Запрос:
+```
+PUT /api/v1/sales/category/<id>
+```
+
+JSON тело запроса:
+```json
+{
+   "category": "Интернет",
+   "imageUrl": "https://w7.pngwing.com/pngs/1022/876/png-transparent-computer-icons-internet-world-wide-web-symmetry-earth-internet.png"
+}
+```
+
+| Параметр   | Смысл |
+|------------|-------|
+| `category` | Наименование категории, которое отображается в приложении |
+| `imageUrl` | Иконка для категории, которая отображается в МЛК |
+
+Тип категории поменять нельзя.
+
+Пример успешного ответа
+```json
+{
+   "success": true,
+   "data": {
+      "id": 2,
+      "category": "Интернет",
+      "image_url": "https://w7.pngwing.com/pngs/1022/876/png-transparent-computer-icons-internet-world-wide-web-symmetry-earth-internet.png",
+      "type": "type_inet"
    },
    "message": "success",
    "code": 200
