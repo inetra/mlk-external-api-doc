@@ -1,7 +1,7 @@
 # Описание внешних API МЛК
 
 > [!warning]
-> Документация соответствует МЛК версии 26.6
+> Документация соответствует МЛК версии 26.8
 
 ## Общие положения
 
@@ -91,6 +91,11 @@ PUT /api/v1/notifications/interval/old
 
 ### Отправка уведомления
 
+> [!warning] Deprecated
+> С версии **26.8** эндпоинт `POST /api/v1/notifications/send` устарел. Для массовой и надёжной рассылки используйте
+> [`POST /api/v1/notifications/send_async`](#асинхронная-отправка-уведомления).
+> Синхронный `send` при отправке всем абонентам может превысить лимит времени выполнения PHP.
+
 Запрос:
 ```
 POST /api/v1/notifications/send
@@ -144,6 +149,54 @@ POST /api/v1/notifications/send
     "code": 200
 }
 ```
+
+### Асинхронная отправка уведомления
+
+Запрос:
+```
+POST /api/v1/notifications/send_async
+```
+
+Тело запроса — то же, что у `POST /api/v1/notifications/send`:
+
+```json
+{
+    "subscriber": "...",
+    "title": "title",
+    "body": "body",
+    "data": {
+        "type": "balance_up"
+    }
+}
+```
+
+При отсутствии `subscriber` уведомление ставится в очередь на отправку всем абонентам, вошедшим в МЛК.
+Создание записей уведомлений и доставка push выполняются фоновым worker очереди `sender`.
+
+Если целевых абонентов нет, возвращается HTTP 404:
+
+```json
+{
+    "success": false,
+    "message": "Subscribers not found",
+    "code": 404
+}
+```
+
+Успешный ответ (HTTP 202) означает, что задача принята в очередь:
+
+```json
+{
+    "success": true,
+    "data": {
+        "queued": true
+    },
+    "message": "Notifications queued.",
+    "code": 202
+}
+```
+
+Статус конкретного уведомления после доставки можно отслеживать через `GET /api/v1/notifications/<id>`.
 
 ### Отслеживание статуса уведомления
 
@@ -221,7 +274,7 @@ POST /api/v1/news/
             "body": "Body of the post.",
             "created_at": "2021-09-27T09:48:55+0300"
         },
-        "notification_result": "Notifications sended."
+        "notification_result": "Notifications queued."
     },
     "message": "success",
     "code": 200
@@ -230,7 +283,7 @@ POST /api/v1/news/
 
 > [!note] Отправка уведомлений о новости
 > 
-> При создании новости всем пользователям отправляется push-уведомление - в заголовок уведомления передается `title` и `announcement`, если указан.
+> При создании новости push-уведомления всем пользователям ставятся в очередь (`sender`): в заголовок передаётся `title`, в текст — `announcement` (если указан). Поле `notification_result` принимает значение `Notifications queued.` или `Subscribers not found`.
 
 > [!note] Рекомендация по верстке body
 > 

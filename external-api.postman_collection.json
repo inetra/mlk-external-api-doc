@@ -62,7 +62,7 @@
           "response": []
         },
         {
-          "name": "Отправка уведомления",
+          "name": "Отправка уведомления (deprecated)",
           "event": [
             {
               "listen": "test",
@@ -104,7 +104,38 @@
                 "notifications",
                 "send"
               ]
-            }
+            },
+            "description": "Deprecated. Prefer POST /api/v1/notifications/send_async for bulk and async delivery."
+          },
+          "response": []
+        },
+        {
+          "name": "Асинхронная отправка уведомления",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Плановые работы\",\n    \"body\": \"Завтра с 02:00 до 04:00 возможны перерывы связи\",\n    \"data\": {\n        \"type\": \"other\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/api/v1/notifications/send_async",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "send_async"
+              ]
+            },
+            "description": "Queues push delivery on the sender worker. Omit subscriber to send to all MLK subscribers. Returns HTTP 202."
           },
           "response": []
         },
