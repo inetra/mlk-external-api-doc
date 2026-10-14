@@ -538,6 +538,62 @@
             }
           ]
         }
+       ]
+     },
+     {
+       "name": "Платежи",
+      "item": [
+        {
+          "name": "Платёжная ссылка alfa без email и phone_number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200 и нет ошибки валидации email\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.not.have.property(\"email\");",
+                  "    pm.expect(body.data.pay_link, \"pay_link не пустой\").to.be.a(\"string\").and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SUBSCRIBER_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/api/v1/subscriber/accounts/{{ACCOUNT_ID}}/pay-link?amount={{PAY_AMOUNT}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subscriber",
+                "accounts",
+                "{{ACCOUNT_ID}}",
+                "pay-link"
+              ],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "{{PAY_AMOUNT}}"
+                }
+              ]
+            },
+            "description": "Драйвер alfa: запрос без email и без phone_number должен проходить валидацию и вернуть непустой pay_link (ТЗ UMLK-1735). Ожидаемого ответа {\"email\":[\"validation.required\"]} быть не должно."
+          },
+          "response": []
+        }
       ]
     }
   ],
@@ -590,6 +646,21 @@
       "key": "GOOD_ID",
       "value": "",
       "description": "Артикул товара"
+    },
+    {
+      "key": "SUBSCRIBER_TOKEN",
+      "value": "",
+      "description": "JWT-токен абонента (мобильное API, pay-link)"
+    },
+    {
+      "key": "ACCOUNT_ID",
+      "value": "",
+      "description": "Идентификатор лицевого счёта абонента"
+    },
+    {
+      "key": "PAY_AMOUNT",
+      "value": "250",
+      "description": "Сумма платежа для pay-link"
     }
   ]
 }
